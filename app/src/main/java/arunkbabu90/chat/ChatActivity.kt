@@ -3,10 +3,7 @@ package arunkbabu90.chat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -40,9 +37,10 @@ class ChatActivity : AppCompatActivity(), ChildEventListener {
 
         btn_send.setOnClickListener {
             val message: String = et_message.text.toString()
-            val msgMap = hashMapOf<String, Any>(
+            val msgMap = hashMapOf(
                 Constants.FIELD_KEY_NAME to userId,
-                Constants.FIELD_KEY_MESSAGE to message
+                Constants.FIELD_KEY_MESSAGE to message,
+                "timestamp" to ServerValue.TIMESTAMP
             )
             chatRoot.push().updateChildren(msgMap)
         }
@@ -60,9 +58,7 @@ class ChatActivity : AppCompatActivity(), ChildEventListener {
         loadMessages(snapshot)
     }
 
-    override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-        loadMessages(snapshot)
-    }
+    override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) { }
 
     override fun onChildRemoved(snapshot: DataSnapshot) { }
 
